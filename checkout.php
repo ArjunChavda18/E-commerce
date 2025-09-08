@@ -1,14 +1,9 @@
 <?php
 session_start();
 include "header.php";
+require 'db-connection.php';
+require 'functions.php';
 
-$total = isset($_SESSION['old_total']) ? $_SESSION['old_total'] : 0;
-$discount = isset($_SESSION['discount']) ? $_SESSION['discount'] : 0;
-$discountAmount = isset($_SESSION['discount_amount']) ? $_SESSION['discount_amount'] : 0;
-$newTotal = isset($_SESSION['discount_total']) ? $_SESSION['discount_total'] : $total;
-$coupon_code = isset($_SESSION['coupon_code']) ? $_SESSION['coupon_code'] : $total;
-// print_r($_SESSION);
-// exit();
 ?>
 <!-- Cart -->
 <style>
@@ -113,43 +108,8 @@ input:focus {
 				<div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
 					<h4 class="mtext-109 cl2 p-b-30">Cart Totals</h4>
 
-					<div class="flex-w flex-t bor12 p-b-13">
-						<div class="size-208">
-							<span class="stext-110 cl2">Subtotal:</span>
-						</div>
-						<div class="size-209">
-							<span class="mtext-110 cl2">$ <?= number_format($total, 2) ?></span>
-						</div>
-					</div>
-					<div class="flex-w flex-t bor12 p-b-13">
-						<div class="size-208">
-							<span class="stext-110 cl2">Discount:</span>
-						</div>
-						<div class="size-209">
-							<span class="mtext-110 cl2"><?= number_format($discount, 2) ?>%</span>
-						</div>
-					</div>
-					<div class="flex-w flex-t bor12 p-b-13">
-						<div class="size-208">
-							<span class="stext-110 cl2">Discount Amount:</span>
-						</div>
-						<div class="size-209">
-							<span class="mtext-110 cl2">-$ <?= number_format($discountAmount, 2) ?></span>
-						</div>
-					</div>
-
-					<div class="flex-w flex-t p-t-27 p-b-33">
-						<div class="size-208">
-							<span class="mtext-101 cl2">Total:</span>
-						</div>
-						<div class="size-209 p-t-1">
-							<span class="mtext-110 cl2">$ <?= number_format($newTotal, 2) ?></span>
-						</div>
-					</div>
-
-					<!-- <button class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
-						Proceed to Checkout
-					</button> -->
+					<?php echo getCartTotalBlock(); ?>
+					
 					<div class="header-cart-buttons flex-w w-full">
 						<a href="#" id="checkoutBtn" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
 							Confirm Order

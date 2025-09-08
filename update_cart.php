@@ -23,6 +23,7 @@ if (!empty($cartData)) {
                 } else {
                     unset($cart[$key]); // remove product
                     unset($_SESSION['old_total']);
+                    unsetDiscountSession();
                 }
             }
         }
@@ -34,7 +35,11 @@ if (!empty($cartData)) {
     // Save back to session as JSON
     $_SESSION['cart'] = json_encode($cart);
     $_SESSION['cart_count'] = $cartCount;
-    
+
+    if ($cartCount === 0) {
+        unsetDiscountSession();
+    }
+
     if ($cartCount > 0) {
     echo json_encode([
         "status" => "success",

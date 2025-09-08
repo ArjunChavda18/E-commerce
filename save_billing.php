@@ -58,19 +58,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $cart = json_decode($_SESSION['cart'], true);
 
             $stmtItems = $pdo->prepare("
-                INSERT INTO order_products (order_id, product_id, quantity, sub_total) 
-                VALUES (?, ?, ?, ?)
+                INSERT INTO order_products (order_id, product_id, quantity, size, color, sub_total) 
+                VALUES (?, ?, ?, ?, ?, ?)
             ");
 
             foreach ($cart as $item) {
                 $product_id = $item['id'];
                 $quantity = $item['quantity'];
+                $size = $item['size'];
+                $color = $item['color'];
                 $sub_total = $total; // or calculate based on product price * quantity
 
                 $stmtItems->execute([
                     $order_id,
                     $product_id,
                     $quantity,
+                    $size,
+                    $color,
                     $sub_total
                 ]);
             }

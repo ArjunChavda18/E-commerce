@@ -113,7 +113,7 @@
     [ Show / hide modal search ]*/
     $('.js-show-modal-search').on('click', function(){
         $('.modal-search-header').addClass('show-modal-search');
-        $(this).css('opacity','0');
+        $('.js-show-modal-search').css('opacity','1');
     });
 
     $('.js-hide-modal-search').on('click', function(){
@@ -231,7 +231,7 @@
         $(document).on('click', '.btn-num-product-down', function () {
             var input = $(this).closest(".wrap-num-product").find("input.num-product");
             var numProduct = Number(input.val());
-            if (numProduct > 1) input.val(numProduct - 1);
+            if (numProduct > 0) input.val(numProduct - 1);
         });
 
         // increase quantity
@@ -284,6 +284,82 @@
     
     /*==================================================================
     [ Show modal1 ]*/
+    var totalPagesGlobal = 0;
+
+	$(document).ready(function () {
+		let currentPage = 1;
+
+		// Reusable function: load products (with search & pagination)
+		function loadProducts(page = 1, search = '') {
+			$.ajax({
+				url: 'get-products.php',
+				method: 'GET',
+				data: {
+					page: page,
+					search: search
+				},
+				success: function (productsHtml) {
+					if (page === 1) {
+						// First load (or after search): reset product list
+						$('#product-list').html(productsHtml);
+					} else {
+						// Load more: append
+						$('#product-list').append(productsHtml);
+					}
+
+					$('#load-more').data('page', page + 1);
+
+					// refresh pagination info
+					loadPagination(search, page);
+				},
+				error: function (err) {
+					console.log(err);
+					alert('Failed to load products.');
+				}
+			});
+		}
+
+		function loadPagination(search = '', page = 1) {
+			$.ajax({
+				url: 'get-pagination.php',
+				method: 'GET',
+				data: {
+					search: search
+				},
+				success: function (totalPages) {
+					totalPagesGlobal = totalPages;
+
+					// hide/show Load More depending on remaining pages
+					if (page >= totalPagesGlobal || totalPagesGlobal <= 1) {
+						$('#load-more').hide();
+					} else {
+						$('#load-more').show();
+					}
+
+					// reload isotope layout (if using isotope grid)
+					$('.isotope-grid').isotope('reloadItems').isotope();
+				}
+			});
+		}
+
+		// Initial load (no search)
+		loadProducts();
+
+		// Load more products
+		$(document).on('click', '#load-more', function (e) {
+			e.preventDefault();
+			let page = $(this).data('page');
+			let search = $('#search').val(); // get search text
+			loadProducts(page, search);
+		});
+
+		// Trigger search
+		$('#search').on('keyup', function () {
+			let query = $(this).val();
+			currentPage = 1; // reset page
+			loadProducts(currentPage, query); // reload products with search
+		});
+	});
     
     $(document).on('click', '.js-show-modal1', function(e) {
         e.preventDefault();
@@ -386,9 +462,6 @@
                 swal(response.status, "is added to cart !", "success");
                 $(".icon-header-item").attr("data-notify", response.cart_count);
             },
-            // error: function () {
-            //     swal("Error", "AJAX request failed!", "error");
-            // }
         });
     });
     $(document).ready(function () {
@@ -429,13 +502,14 @@
                 if (res.status === "success") {
                     if (res.cart_count === 0) {
                         $(".row").hide();                 // hide cart block
-                        $("#empty-cart-message2").show();  // show empty cart msg
+                        $("#empty-cart-message2").show();
+                        $(".icon-header-item").attr("data-notify", res.cart_count);  // show empty cart msg
                     } else {
                         alert("Cart updated successfully!");
                         $(".get-total-container").html(res.html);
                         $(".wrap-table-shopping-cart").html(res.products_html);
                         $(".icon-header-item").attr("data-notify", res.cart_count);
-                        initQuantityButtons();
+                        initQuantityButtons(); // reinitialize quantity buttons
                     }
                 }
             }

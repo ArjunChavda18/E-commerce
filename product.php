@@ -1,5 +1,7 @@
 <?php
 include "header.php";
+require 'db-connection.php';
+require 'functions.php'; // ✅ include reusable function
 ?>
 <!-- Cart -->
 <div class="wrap-header-cart js-panel-cart">
@@ -254,7 +256,14 @@ include "header.php";
 		</div>
 
 		<div class="container">
-			<div class="row isotope-grid" id="product-list"></div>
+			<div class="row isotope-grid" id="product-list">
+				<?php
+				// ✅ Use reusable function
+				foreach ($products as $product) {
+					echo renderProductCard($product);
+				}
+				?>
+			</div>
 			<div id="pagination" class="flex-c-m flex-w w-full p-t-45">
 				<!-- Pagination numbers will be injected here -->
 			</div>
@@ -268,84 +277,9 @@ include "header.php";
 </div>
 
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-	var totalPagesGlobal = 0;
-
-	$(document).ready(function () {
-		let currentPage = 1;
-
-		// Reusable function: load products (with search & pagination)
-		function loadProducts(page = 1, search = '') {
-			$.ajax({
-				url: 'get-products.php',
-				method: 'GET',
-				data: {
-					page: page,
-					search: search
-				},
-				success: function (productsHtml) {
-					if (page === 1) {
-						// First load (or after search): reset product list
-						$('#product-list').html(productsHtml);
-					} else {
-						// Load more: append
-						$('#product-list').append(productsHtml);
-					}
-
-					$('#load-more').data('page', page + 1);
-
-					// refresh pagination info
-					loadPagination(search, page);
-				},
-				error: function (err) {
-					console.log(err);
-					alert('Failed to load products.');
-				}
-			});
-		}
-
-		function loadPagination(search = '', page = 1) {
-			$.ajax({
-				url: 'get-pagination.php',
-				method: 'GET',
-				data: {
-					search: search
-				},
-				success: function (totalPages) {
-					totalPagesGlobal = totalPages;
-
-					// hide/show Load More depending on remaining pages
-					if (page >= totalPagesGlobal || totalPagesGlobal <= 1) {
-						$('#load-more').hide();
-					} else {
-						$('#load-more').show();
-					}
-
-					// reload isotope layout (if using isotope grid)
-					$('.isotope-grid').isotope('reloadItems').isotope();
-				}
-			});
-		}
-
-		// Initial load (no search)
-		loadProducts();
-
-		// Load more products
-		$(document).on('click', '#load-more', function (e) {
-			e.preventDefault();
-			let page = $(this).data('page');
-			let search = $('#search').val(); // get search text
-			loadProducts(page, search);
-		});
-
-		// Trigger search
-		$('#search').on('keyup', function () {
-			let query = $(this).val();
-			currentPage = 1; // reset page
-			loadProducts(currentPage, query); // reload products with search
-		});
-	});
-</script>
+	
+</script> -->
 
 <?php include "footer.php"; ?>

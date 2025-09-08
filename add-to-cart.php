@@ -8,6 +8,8 @@ $id       = $_POST['id'];
 $name     = $_POST['name'];
 $quantity = $_POST['quantity'] ?? 1;
 $price    = $_POST['price'] ?? 0;
+$color    = $_POST['color'] ?? '';
+$size     = $_POST['size'] ?? '';
 
 // initialize cart session as JSON string if not set
 if (!isset($_SESSION['cart'])) {
@@ -29,6 +31,8 @@ $cart[] = [
     "quantity" => $quantity,
     "name" => $name,
     "price" => $price,
+    "size" => $size,
+    "color" => $color
 ];
 
 $cartCount = count($cart);
