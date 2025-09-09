@@ -1,5 +1,6 @@
 <?php include 'header.php';
 include 'db-connection.php'; // your DB connection
+require 'functions.php'; // ✅ include reusable functions
 
 $id = $_GET['id'] ?? 0;
 $stmt = $pdo->prepare("SELECT * FROM products WHERE id = :id");
@@ -44,128 +45,7 @@ $_SESSION['color'] = $colors;
 <!-- Product Detail -->
 <section class="sec-product-detail bg0 p-t-65 p-b-60">
 	<div class="container">
-		<div class="row">
-			<div class="col-md-6 col-lg-7 p-b-30">
-				<div class="p-l-25 p-r-30 p-lr-0-lg">
-					<div class="wrap-slick3 flex-sb flex-w">
-
-						<!-- Thumbnails -->
-						<div class="wrap-slick3-dots"></div>
-
-						<!-- Arrows -->
-						<div class="wrap-slick3-arrows flex-sb-m flex-w">
-
-						</div>
-
-						<!-- Main Slider -->
-						<div class="slick3 gallery-lb">
-							<?php foreach ($images as $img): ?>
-								<div class="item-slick3" data-thumb="<?= htmlspecialchars($img) ?>">
-									<div class="wrap-pic-w pos-relative">
-										<img src="<?= htmlspecialchars($img) ?>" alt="IMG-PRODUCT">
-
-										<div class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04">
-											<a href="<?= htmlspecialchars($img) ?>">
-												<i class="fa fa-expand"></i>
-											</a>
-										</div>
-									</div>
-								</div>
-							<?php endforeach; ?>
-						</div>
-					</div>
-
-				</div>
-			</div>
-
-			<div class="col-md-6 col-lg-5 p-b-30">
-				<div class="p-r-50 p-t-5 p-lr-0-lg">
-
-					<!-- Product name -->
-					<h4 class="mtext-105 cl2 js-name-detail p-b-14">
-						<?= htmlspecialchars($product['name']) ?>
-					</h4>
-
-					<!-- Product price -->
-					<span class="mtext-106 cl2">
-						$<?= number_format($product['price'], 2) ?>
-					</span>
-
-					<!-- Product description -->
-					<p class="stext-102 cl3 p-t-23">
-						<?= htmlspecialchars($product['product_description']) ?>
-					</p>
-
-					<!-- Size dropdown -->
-					<div class="p-t-33">
-						<div class="flex-w flex-r-m p-b-10">
-							<div class="size-203 flex-c-m respon6"> Size </div>
-							<div class="size-204 respon6-next">
-								<div class="rs1-select2 bor8 bg0">
-									<select class="js-select2" name="size">
-										<option>Choose an option</option>
-										<?php foreach ($sizes as $s): ?>
-											<option><?= htmlspecialchars($s) ?></option>
-										<?php endforeach; ?>
-									</select>
-									<div class="dropDownSelect2"></div>
-								</div>
-								<small id="size-error" class="text-danger"></small>
-							</div>
-						</div>
-
-						<!-- Color dropdown -->
-						<div class="flex-w flex-r-m p-b-10">
-							<div class="size-203 flex-c-m respon6"> Color </div>
-							<div class="size-204 respon6-next">
-								<div class="rs1-select2 bor8 bg0">
-									<select class="js-select2" name="color">
-										<option>Choose an option</option>
-										<?php foreach ($colors as $c): ?>
-											<option><?= htmlspecialchars($c) ?></option>
-										<?php endforeach; ?>
-									</select>
-									<div class="dropDownSelect2"></div>
-								</div>
-								<small id="color-error" class="text-danger"></small>
-							</div>
-						</div>
-
-						<!-- Quantity and Add to cart -->
-						<div class="flex-w flex-r-m p-b-10">
-							<div class="size-204 flex-w flex-m respon6-next">
-								<div class="wrap-num-product flex-w m-r-20 m-tb-10">
-									<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m"> <i class="fs-16 zmdi zmdi-minus"></i> </div> <input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="1" min="1">
-									<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m"> <i class="fs-16 zmdi zmdi-plus"></i> </div>
-								</div>
-								<small id="quantity-error" class="text-danger"></small>
-								<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail" data-id="<?= $product['id'] ?>" data-name="<?= htmlspecialchars($product['name']) ?>">
-									Add to cart
-								</button>
-							</div>
-						</div>
-					</div>
-
-					<!-- Wishlist and social links -->
-					<div class="flex-w flex-m p-l-100 p-t-40 respon7">
-						<div class="flex-m bor9 p-r-10 m-r-11">
-							<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100" data-tooltip="Add to Wishlist">
-								<i class="zmdi zmdi-favorite"></i>
-							</a>
-						</div>
-						<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Facebook">
-							<i class="fa fa-facebook"></i>
-						</a>
-						<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Twitter">
-							<i class="fa fa-twitter"></i>
-						</a>
-						<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Google Plus">
-							<i class="fa fa-google-plus"></i>
-						</a>
-					</div>
-				</div>
-			</div>
-		</div>
+		<?php echo getProductDetails($product); ?>
 
 		<div class="bor10 m-t-50 p-t-43 p-b-40">
 			<!-- Tab01 -->

@@ -1,3 +1,7 @@
+<?php
+include 'db-connection.php'; // your DB connection
+require_once 'functions.php'; // ✅ include reusable functions
+?>
 <footer class="bg3 p-t-75 p-b-32">
 	<div class="container">
 		<div class="row">
