@@ -226,21 +226,7 @@
 
     /*==================================================================
     [ Rating ]*/
-    function initQuantityButtons() {
-        // decrease quantity
-        $(document).on('click', '.btn-num-product-down', function () {
-            var input = $(this).closest(".wrap-num-product").find("input.num-product");
-            var numProduct = Number(input.val());
-            if (numProduct > 0) input.val(numProduct - 1);
-        });
-
-        // increase quantity
-        $(document).on('click', '.btn-num-product-up', function () {
-            var input = $(this).closest(".wrap-num-product").find("input.num-product");
-            var numProduct = Number(input.val());
-            input.val(numProduct + 1);
-        });
-    }
+    
 
     $('.wrap-rating').each(function(){
         var item = $(this).find('.item-rating');
@@ -284,333 +270,81 @@
     
     /*==================================================================
     [ Show modal1 ]*/
-    var totalPagesGlobal = 0;
+    // var totalPagesGlobal = 0;
 
-	$(document).ready(function () {
-		let currentPage = 1;
+	// $(document).ready(function () {
+	// 	let currentPage = 1;
 
-		// Reusable function: load products (with search & pagination)
-		function loadProducts(page = 1, search = '') {
-			$.ajax({
-				url: 'get-products.php',
-				method: 'GET',
-				data: {
-					page: page,
-					search: search
-				},
-				success: function (productsHtml) {
-					if (page === 1) {
-						// First load (or after search): reset product list
-						$('#product-list').html(productsHtml);
-					} else {
-						// Load more: append
-						$('#product-list').append(productsHtml);
-					}
+	// 	// Reusable function: load products (with search & pagination)
+	// 	function loadProducts(page = 1, search = '') {
+	// 		$.ajax({
+	// 			url: 'common-functions.php',
+	// 			method: 'GET',
+    //             dataType: 'json',
+	// 			data: {
+    //                 action: 'getProducts',
+	// 				page: page,
+	// 				search: search
+	// 			},
+	// 			success: function (response) {
+    //                 let productsHtml = response.html;
+    //                 let totalPages = response.totalPages;
+	// 				if (page === 1) {
+	// 					// First load (or after search): reset product list
+	// 					$('#product-list').html(productsHtml);
+	// 				} else {
+	// 					// Load more: append
+	// 					$('#product-list').append(productsHtml);
+	// 				}
 
-					$('#load-more').data('page', page + 1);
+	// 				$('#load-more').data('page', page + 1);
 
-					// refresh pagination info
-					loadPagination(search, page);
-				},
-				error: function (err) {
-					console.log(err);
-					alert('Failed to load products.');
-				}
-			});
-		}
+	// 				// refresh pagination info
+	// 				totalPagesGlobal = response.totalPages;
 
-		function loadPagination(search = '', page = 1) {
-			$.ajax({
-				url: 'get-pagination.php',
-				method: 'GET',
-				data: {
-					search: search
-				},
-				success: function (totalPages) {
-					totalPagesGlobal = totalPages;
+	// 				// hide/show Load More depending on remaining pages
+	// 				if (page >= totalPagesGlobal || totalPagesGlobal <= 1) {
+	// 					$('#load-more').hide();
+	// 				} else {
+	// 					$('#load-more').show();
+	// 				}
 
-					// hide/show Load More depending on remaining pages
-					if (page >= totalPagesGlobal || totalPagesGlobal <= 1) {
-						$('#load-more').hide();
-					} else {
-						$('#load-more').show();
-					}
+	// 				// reload isotope layout (if using isotope grid)
+    //                 $('.isotope-grid').isotope('reloadItems').isotope();
+	// 			},
+	// 			error: function (err) {
+	// 				console.log(err);
+	// 				alert('Failed to load products.');
+	// 			}
+	// 		});
+	// 	}
+    //     loadProducts(); 
+	// 	// Load more products
+	// 	$(document).on('click', '#load-more', function (e) {
+	// 		e.preventDefault();
+	// 		let page = $(this).data('page');
+	// 		let search = $('#search').val(); // get search text
+	// 		loadProducts(page, search);
+	// 	});
 
-					// reload isotope layout (if using isotope grid)
-					$('.isotope-grid').isotope('reloadItems').isotope();
-				}
-			});
-		}
-
-		// Initial load (no search)
-		loadProducts();
-
-		// Load more products
-		$(document).on('click', '#load-more', function (e) {
-			e.preventDefault();
-			let page = $(this).data('page');
-			let search = $('#search').val(); // get search text
-			loadProducts(page, search);
-		});
-
-		// Trigger search
-		$('#search').on('keyup', function () {
-			let query = $(this).val();
-			currentPage = 1; // reset page
-			loadProducts(currentPage, query); // reload products with search
-		});
-	});
+	// 	// Trigger search
+	// 	$('#search').on('keyup', function () {
+	// 		let query = $(this).val();
+	// 		currentPage = 1; // reset page
+	// 		loadProducts(currentPage, query); // reload products with search
+	// 	});
+	// });
     
-    $(document).on('click', '.js-show-modal1', function(e) {
-        e.preventDefault();
-
-        let productId = $(this).data('id');
-        $.ajax({
-            url: 'get-product-details.php',
-            method: 'GET',
-            data: { id: productId },
-            success: function(response) {
-                $('.wrap-modal1 .bg0').html(response); // inject modal HTML
-                $('.js-modal1').addClass('show-modal1');
-
-                $('.wrap-slick3').each(function(){
-                    $(this).find('.slick3').slick({
-                        slidesToShow: 1,
-                        slidesToScroll: 1,
-                        fade: true,
-                        infinite: true,
-                        autoplay: false,
-                        autoplaySpeed: 6000,
-
-                        arrows: true,
-                        appendArrows: $(this).find('.wrap-slick3-arrows'),
-                        prevArrow:'<button class="arrow-slick3 prev-slick3"><i class="fa fa-angle-left" aria-hidden="true"></i></button>',
-                        nextArrow:'<button class="arrow-slick3 next-slick3"><i class="fa fa-angle-right" aria-hidden="true"></i></button>',
-
-                        dots: true,
-                        appendDots: $(this).find('.wrap-slick3-dots'),
-                        dotsClass:'slick3-dots',
-                        customPaging: function(slick, index) {
-                            var portrait = $(slick.$slides[index]).data('thumb');
-                            return '<img src=" ' + portrait + ' "/><div class="slick3-dot-overlay"></div>';
-                        },  
-                    });
-                });
-
-                $(".js-select2").each(function(){
-                    $(this).select2({
-                        minimumResultsForSearch: 20,
-                        dropdownParent: $(this).next('.dropDownSelect2')
-                    });
-                });
-
-                initQuantityButtons(); // initialize quantity buttons inside modal
-            }
-        });
-    });
-
-    // Close modal
-    $(document).on('click', '.js-hide-modal1', function() {
-        $('.js-modal1').removeClass('show-modal1');
-    });
     
-    $(document).on("click", ".js-addcart-detail", function() {
-        let productId = $(this).data("id");
-        let productName = $(this).data("name");
-        let size = $("select[name='size']").val();
-        let color = $("select[name='color']").val();
-        let quantity = $(".num-product").val();
+    
+    
+    
 
-        $("#size-error").text("");
-        $("#color-error").text("");
-        $("#quantity-error").text("");
-        let hasError = false;
+    
 
-        // --- Validation ---
-        if (!size || size === "Choose an option") {
-            $("#size-error").text("Please select a size.");
-            hasError = true;
-        }
+    
 
-        if (!color || color === "Choose an option") {
-            $("#color-error").text("Please select a color.");
-            hasError = true;
-        }
-
-        if (!quantity || quantity <= 0) {
-            $("#quantity-error").text("Quantity must be at least 1.");
-            // $(".num-product").val(1); // reset
-            hasError = true;
-        }
-
-        // Stop if errors found
-        if (hasError) return;
-
-        $.ajax({
-            url: "add-to-cart.php",
-            method: "POST",
-            data: {
-                id: productId,
-                name: productName,
-                size: size,
-                color: color,
-                quantity: quantity
-            },
-            dataType: "json",
-            success: function(response) {
-                // alert("Product added to cart!");
-                swal(response.status, "is added to cart !", "success");
-                $(".icon-header-item").attr("data-notify", response.cart_count);
-            },
-        });
-    });
-    $(document).ready(function () {
-    // when cart icon clicked
-        $(document).on("click", ".js-show-cart", function () {
-            $.ajax({
-                url: "get-cart.php", // this will return the HTML of cart items
-                method: "GET",
-                success: function (response) {
-                    // insert cart HTML inside cart panel
-                    $(".wrap-header-cart.js-panel-cart").html(response);
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error fetching cart:", error);
-                }
-            });
-        });
-        $(document).on("click", ".js-hide-cart", function () {
-            $(".js-panel-cart").removeClass("show-header-cart");
-        });
-    });
-
-    $(document).on("click", "#update-cart", function () {
-        let cartData = [];
-
-        $(".num-product").each(function () {
-            let id = $(this).data("id");
-            let quantity = $(this).val();
-            cartData.push({id: id, quantity: quantity});
-        });
-
-        $.ajax({
-            url: "update_cart.php",
-            type: "POST",
-            data: {cart: JSON.stringify(cartData)},
-            success: function (response) {
-                let res = JSON.parse(response);
-                if (res.status === "success") {
-                    if (res.cart_count === 0) {
-                        $(".row").hide();                 // hide cart block
-                        $("#empty-cart-message2").show();
-                        $(".icon-header-item").attr("data-notify", res.cart_count);  // show empty cart msg
-                    } else {
-                        alert("Cart updated successfully!");
-                        $(".get-total-container").html(res.html);
-                        $(".wrap-table-shopping-cart").html(res.products_html);
-                        $(".icon-header-item").attr("data-notify", res.cart_count);
-                        initQuantityButtons(); // reinitialize quantity buttons
-                    }
-                }
-            }
-        });
-    });
-
-    $('#apply_coupon').click(function () {
-    var coupon = $('#coupon_code').val();
-
-        $.ajax({
-            url: 'apply_coupon.php',
-            type: 'POST',
-            data: { coupon_code: coupon },
-            dataType: 'json', // tell jQuery we expect JSON response
-            success: function (res) {
-                console.log(res);
-                if (res.status === 'success') {
-                    $('.get-total-container').html(res.html);
-                    $('#coupon_message').css("color", "green").text("Coupon applied! " + res.discount + "% off");
-                    // Update total in UI
-                    // $('#cart_total_after_coupon').css("color", "green").html("New amount: $" + res.new_total.toLocaleString('en-US', {}));
-
-                } else {
-                    $('.get-total-container').html(res.html);
-                    $('#coupon_message')
-                        .css("color", "red")
-                        .text(res.message);
-                    $('#cart_total_after_coupon')
-                        .css("color", "red")
-                        .text(res.discount_message);
-                }
-            },
-            error: function (error) {
-                console.log("AJAX Error:", error);
-                $('#coupon_message').css("color", "red").text("Something went wrong. Please try again.");
-            }
-        });
-    });
-
-    $(document).on("click", "#checkoutBtn", function(e){
-        e.preventDefault();
-
-        let data = {
-            name: $("#name").val().trim(),
-            email: $("#email").val().trim(),
-            phone: $("#phone").val().trim(),
-            pincode: $("#pincode").val().trim(),
-            city: $("#city").val().trim(),
-            address: $("#address").val().trim()
-        };
-
-        // Clear old error messages
-        $("#name-error, #email-error, #phone-error, #pincode-error, #city-error, #address-error").text("");
-
-        let hasError = false;
-
-        if (!data.name) {
-            $("#name-error").text("Please enter your name.");
-            hasError = true;
-        }
-        if (!data.email) {
-            $("#email-error").text("Please enter your email.");
-            hasError = true;
-        }
-        if (!data.phone) {
-            $("#phone-error").text("Please enter your phone number.");
-            hasError = true;
-        }
-        if (!data.pincode) {
-            $("#pincode-error").text("Please enter your pincode.");
-            hasError = true;
-        }
-        if (!data.city) {
-            $("#city-error").text("Please enter your city.");
-            hasError = true;
-        }
-        if (!data.address) {
-            $("#address-error").text("Please enter your address.");
-            hasError = true;
-        }
-
-        if (hasError) return;
-
-        // Send via AJAX
-        $.ajax({
-            url: "save_billing.php",
-            type: "POST",
-            data: data,
-            success: function(response){
-                let res = JSON.parse(response);
-                if(res.status === "success"){
-                    alert(res.message);
-                    $("input").val(""); // clear fields
-                    window.location.href = "thankyou.php";
-                }
-            },
-            error: function(){
-                alert("Something went wrong!");
-            }
-        });
-    });
+    
 
 
 })(jQuery);

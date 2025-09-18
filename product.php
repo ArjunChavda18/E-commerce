@@ -1,7 +1,7 @@
-<?php
-include "header.php";
+<?php session_start();
 require 'db-connection.php';
-require 'functions.php'; // ✅ include reusable function
+require 'functions/product-function.php'; // ✅ include reusable function
+include "includes/header.php";
 ?>
 <!-- Cart -->
 <div class="wrap-header-cart js-panel-cart">
@@ -18,10 +18,6 @@ require 'functions.php'; // ✅ include reusable function
 		
 		<div class="container">
 			<div class="row isotope-grid" id="product-list">
-				<?php
-				// ✅ Use reusable function
-				echo renderProductCard($product);
-				?>
 			</div>
 			<div id="pagination" class="flex-c-m flex-w w-full p-t-45">
 				<!-- Pagination numbers will be injected here -->
@@ -34,4 +30,4 @@ require 'functions.php'; // ✅ include reusable function
 		</div>
 	</div>
 </div>
-<?php include "footer.php"; ?>
+<?php include "includes/footer.php"; ?>

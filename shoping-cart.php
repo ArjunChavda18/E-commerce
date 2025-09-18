@@ -1,8 +1,7 @@
 <?php
 session_start();
-include "header.php";
 require 'db-connection.php';
-require 'functions.php';
+require 'functions/cart-functions.php';
 
 $total = 0;
 if (isset($_SESSION['cart'])) {
@@ -10,6 +9,7 @@ if (isset($_SESSION['cart'])) {
 }
 $coupon_code = $_SESSION['coupon_code'] ?? "";
 $discount = $_SESSION['discount'] ?? 0;
+include "includes/header.php";
 ?>
 <style>
 	.stext-104:focus {
@@ -58,7 +58,9 @@ $discount = $_SESSION['discount'] ?? 0;
 				<div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
 					<div class="m-l-25 m-r--38 m-lr-0-xl">
 						<div class="wrap-table-shopping-cart">
-							<?php echo productDetailBlock(); ?>
+							<?php
+							$cartobj = new Cart;
+							echo $cartobj->productDetailBlock(); ?>
 						</div>
 
 						<!-- Coupon + Update -->
@@ -86,7 +88,12 @@ $discount = $_SESSION['discount'] ?? 0;
 						<h4 class="mtext-109 cl2 p-b-30">Cart Totals</h4>
 						
 						<div class="get-total-container">
-							<?php echo getCartTotalBlock(); ?>
+							
+							<?php
+							$cartobj = new Cart;
+							$cartTotal = $cartobj->calculateCartTotals();
+							echo $cartobj->getCartTotalBlock($cartTotal['total'], $cartTotal['discount'], $cartTotal['discountAmount'], $cartTotal['newTotal']);
+							?>
 						</div>
 
 						<div class="header-cart-buttons flex-w w-full">
@@ -109,4 +116,4 @@ $discount = $_SESSION['discount'] ?? 0;
 		</div>
 	</div>
 </form>
-<?php include "footer.php"; ?>
+<?php include "includes/footer.php"; ?>

@@ -1,7 +1,7 @@
-<?php include"header.php";
+<?php session_start();
 require 'db-connection.php';
-require 'functions.php'; // ✅ include reusable function
-
+require 'functions/product-function.php';
+require "includes/header.php";
 ?>
 	<!-- Cart -->
 	<div class="wrap-header-cart js-panel-cart">
@@ -181,10 +181,6 @@ require 'functions.php'; // ✅ include reusable function
 			</div>
 			<?php require 'heading-of-product.php'; ?>
 			<div class="row isotope-grid" id="product-list">
-			<?php
-				// ✅ Use reusable function
-				echo renderProductCard($product);
-			?>
 			</div>
 
 			<!-- Load more -->
@@ -195,4 +191,4 @@ require 'functions.php'; // ✅ include reusable function
 			</div>
 		</div>
 	</section>
-<?php include"footer.php"; ?>
+<?php include "includes/footer.php"; ?>

@@ -1,4 +1,4 @@
-<?php include 'header.php'; ?>
+<?php include 'includes/header.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,6 +36,10 @@
     </style>
 </head>
 <body>
+    <div class="wrap-header-cart js-panel-cart">
+	<div class="s-full js-hide-cart"></div>
+	
+    </div>
     <div class="thanks-container">
         <div class="thankyou-box">
             <h1>🎉 Thank You!</h1>
@@ -45,4 +49,4 @@
     </div>
 </body>
 </html>
-<?php include 'footer.php'; ?>
+<?php include 'includes/footer.php'; ?>

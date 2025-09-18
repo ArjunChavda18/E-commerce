@@ -1,9 +1,3 @@
-<?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -72,6 +66,9 @@ if (session_status() === PHP_SESSION_NONE) {
 						<a href="#" class="flex-c-m trans-04 p-lr-25">
 							USD
 						</a>
+						<a href="../admin/login.php" class="flex-c-m trans-04 p-lr-25">
+							Login
+						</a>
 					</div>
 				</div>
 			</div>
@@ -80,7 +77,7 @@ if (session_status() === PHP_SESSION_NONE) {
 				<nav class="limiter-menu-desktop container">
 
 					<!-- Logo desktop -->
-					<a href="#" class="logo">
+					<a href="index.php" class="logo">
 						<img src="images/icons/logo-01.png" alt="IMG-LOGO">
 					</a>
 
@@ -95,20 +92,20 @@ if (session_status() === PHP_SESSION_NONE) {
 								<a href="product.php">Shop</a>
 							</li>
 
-							<li class="label1" data-label1="hot">
-								<a href="shoping-cart.html">Features</a>
-							</li>
+							<!-- <li class="label1" data-label1="hot">
+								<a href="shoping-cart.php">Features</a>
+							</li> -->
 
-							<li>
+							<!-- <li>
 								<a href="blog.html">Blog</a>
+							</li> -->
+
+							<li>
+								<a href="about.php">About</a>
 							</li>
 
 							<li>
-								<a href="about.html">About</a>
-							</li>
-
-							<li>
-								<a href="contact.html">Contact</a>
+								<a href="contact.php">Contact</a>
 							</li>
 						</ul>
 					</div>

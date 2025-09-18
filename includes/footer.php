@@ -1,7 +1,3 @@
-<?php
-include 'db-connection.php'; // your DB connection
-require_once 'functions.php'; // ✅ include reusable functions
-?>
 <footer class="bg3 p-t-75 p-b-32">
 	<div class="container">
 		<div class="row">
@@ -75,7 +71,9 @@ require_once 'functions.php'; // ✅ include reusable functions
 				</h4>
 
 				<p class="stext-107 cl7 size-201">
-					Any questions? Let us know in store at 8th floor, 379 Hudson St, New York, NY 10018 or call us on (+1) 96 716 6879
+					201 Sunrise,
+					Sunpharma Road, Vadodara,
+					India – 390012.
 				</p>
 
 				<div class="p-t-27">
@@ -271,6 +269,9 @@ require_once 'functions.php'; // ✅ include reusable functions
 </script>
 <!--===============================================================================================-->
 <script src="js/main.js"></script>
+<script src="js/product.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/checkout.js"></script>
 
 </body>
 
