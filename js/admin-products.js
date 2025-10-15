@@ -53,7 +53,7 @@ $(document).ready(function () {
         $.ajax({
             url: "product-actions.php",
             type: "GET",
-            data: { id: id , action: "update" },
+            data: { id: id , action: "edit" },
             success: function (response) {
                 modal.find(".editModalContent").html(response);
                 modal.modal("show");

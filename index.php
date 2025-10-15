@@ -1,5 +1,5 @@
 <?php session_start();
-require 'db-connection.php';
+require 'includes/db-connection.php';
 require 'functions/product-function.php';
 require "includes/header.php";
 ?>

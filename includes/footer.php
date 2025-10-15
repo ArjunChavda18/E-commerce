@@ -271,7 +271,7 @@
 <script src="js/main.js"></script>
 <script src="js/product.js"></script>
 <script src="js/cart.js"></script>
-<script src="js/checkout.js"></script>
+<!-- <script src="js/checkout.js"></script> -->
 
 </body>
 

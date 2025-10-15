@@ -1,9 +1,8 @@
 <?php
-// session_start();
-// if (!isset($_SESSION['admin'])) { die("Unauthorized"); }
 
-require_once "../db-connection.php";
-require_once "../functions/product-function.php";
+include __DIR__ . '/../includes/db-connection.php';
+include __DIR__ . "/../models/product-model.php";
+include __DIR__ . "/../functions/product-function.php";
 
 if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['action']) && $_POST['action'] === "add") {
     // print_r($_POST);
@@ -28,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['action']) && $_POST['
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] === "GET" && $_GET['action'] === "update") {
+if ($_SERVER['REQUEST_METHOD'] === "GET" && $_GET['action'] === "edit") {
     $id = (int)$_GET['id'];
     $product = new Product($id);
     $details = $product->getProduct_Details();

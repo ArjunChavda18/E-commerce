@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("../db-connection.php");
+include __DIR__ . '/../includes/db-connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $pdo->quote($_POST['username']);

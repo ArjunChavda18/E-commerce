@@ -1,115 +1,130 @@
 <?php
 session_start();
-if (!isset($_SESSION['admin'])) { header("Location: login.php"); exit(); }
-include("../db-connection.php");
-
-if (isset($_GET['delete'])) {
-    $id = $_GET['delete'];
-    $stmt = $pdo->prepare("DELETE FROM orders WHERE id=?");
-    $stmt->execute([$id]);
+if (!isset($_SESSION['admin'])) {
+    header("Location: login.php");
+    exit();
 }
-$limit = 5; // Records per page
+include __DIR__ . '/../includes/db-connection.php';
+include '../functions/order-modal.php';
+
+$orderobj = new orderModal(null);
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($page < 1) $page = 1;
-$offset = ($page - 1) * $limit;
 
-// Count total records
-$totalStmt = $pdo->query("SELECT COUNT(*) FROM orders");
-$totalRecords = $totalStmt->fetchColumn();
-$totalPages = ceil($totalRecords / $limit);
+$orderobj->page = $page;
 
-// Fetch records with LIMIT
-$stmt = $pdo->prepare("SELECT * FROM orders ORDER BY id ASC LIMIT :limit OFFSET :offset");
-$stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-$stmt->execute();
-$result = $stmt;
+$result = $orderobj->getOrders();
+
+$totalPages = $orderobj->count('');
+
 // $result = $pdo->query("SELECT * FROM orders ORDER BY id ASC");
 include("../includes/header2.php");
 ?>
 <h2 class="mb-3">Orders</h2>
-    <!-- Products Table -->
-    <div class="card">
-        <table class="table table-bordered table-striped">
-            <thead class="table-dark">
+<!-- Products Table -->
+<div class="container">
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Order Date</th>
+                <th>Coupon Code</th>
+                <th>Status</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Pincode</th>
+                <th>City</th>
+                <th>Shipping Address</th>
+                <th>Amount</th>
+                <th>Discount Amount</th>
+                <th>Final Amount</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($result as $row): ?>
                 <tr>
-                    <th>ID</th>
-                    <th>Order Date</th>
-                    <th>Coupon Code</th>
-                    <th>Status</th>
-                    <th>Full Name</th>
-                    <th>Email</th>
-                    <th>Phone Number</th>
-                    <th>Pincode</th>
-                    <th>City</th>
-                    <th>Shipping Address</th>
-                    <th>Amount</th>
-                    <th>Discount Amount</th>
-                    <th>Final Amount</th>
-                    <th>Action</th>
+                    <td><?= $row['id'] ?></td>
+                    <td><?= htmlspecialchars($row['order_date']) ?></td>
+                    <td><?= htmlspecialchars($row['coupon_code'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($row['status'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($row['full_name'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($row['email'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($row['phone_number'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($row['pincode'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($row['city'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($row['shipping_address'] ?? '') ?></td>
+                    <td><?= number_format($row['amount'], 2) ?></td>
+                    <td><?= number_format($row['discount_amount'], 2) ?></td>
+                    <td><?= number_format($row['final_amount'], 2) ?></td>
+                    <td>
+                        <a class="btn btn-sm btn-primary view-order" data-id="<?= $row['id'] ?>">View</a>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                <?php while($row = $result->fetch(PDO::FETCH_ASSOC)): ?>
-                    <tr>
-                        <td><?= $row['id'] ?></td>
-                        <td><?= htmlspecialchars($row['order_date']) ?></td>
-                        <td><?= htmlspecialchars($row['coupon_code'] ?? '') ?></td>
-                        <td><?= htmlspecialchars($row['status'] ?? '') ?></td>
-                        <td><?= htmlspecialchars($row['full_name'] ?? '') ?></td>
-                        <td><?= htmlspecialchars($row['email'] ?? '') ?></td>
-                        <td><?= htmlspecialchars($row['phone_number'] ?? '') ?></td>
-                        <td><?= htmlspecialchars($row['pincode'] ?? '') ?></td>
-                        <td><?= htmlspecialchars($row['city'] ?? '') ?></td>
-                        <td><?= htmlspecialchars($row['shipping_address'] ?? '') ?></td>
-                        <td><?= number_format($row['amount'], 2) ?></td>
-                        <td><?= number_format($row['discount_amount'], 2) ?></td>
-                        <td><?= number_format($row['final_amount'], 2) ?></td>
-                        <td>
-                            <a href="?delete=<?= $row['id'] ?>" onclick="return confirm('Delete this order?')" class="btn btn-sm btn-danger">Delete</a>
-                        </td>
-                    </tr>
-                
-                <?php endwhile; ?>
-            </tbody>
-        </table>
-        <nav>
-            <ul class="pagination justify-content-center">
-                <!-- Previous Button -->
-                <?php if ($page > 1): ?>
+
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <!-- Order Details Modal -->
+    <div class="modal fade" id="orderModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Order Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="orderDetails">
+                    <!-- AJAX content will load here -->
+                    <div class="text-center">
+                    <p>Loading...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav>
+        <ul class="pagination justify-content-center">
+            <!-- Previous Button -->
+            <?php if ($page > 1): ?>
                 <li class="page-item">
-                    <a class="page-link" href="?page=<?= $page-1 ?>">Previous</a>
+                    <a class="page-link" href="?page=<?= $page - 1 ?>">Previous</a>
                 </li>
-                <?php endif; ?>
+            <?php endif; ?>
 
-                <?php
-                // show 5 page numbers
-                $maxPagesToShow = 5;
-                $start = max(1, $page - floor($maxPagesToShow / 2));
-                $end = min($totalPages, $start + $maxPagesToShow - 1);
+            <?php
+            $maxPagesToShow = 5;
 
-                // adjust if at end
-                if ($end - $start + 1 < $maxPagesToShow) {
-                    $start = max(1, $end - $maxPagesToShow + 1);
-                }
+            // Calculate start & end for sliding window
+            $startPage = max(1, $page - floor($maxPagesToShow / 2));
+            $endPage = min($totalPages, $startPage + $maxPagesToShow - 1);
 
-                for ($i = $start; $i <= $end; $i++):
-                ?>
+            // Adjust startPage if we don’t have enough pages at the end
+            if ($endPage - $startPage + 1 < $maxPagesToShow) {
+                $startPage = max(1, $endPage - $maxPagesToShow + 1);
+            }
+
+            for ($i = $startPage; $i <= $endPage; $i++):
+            ?>
                 <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
                     <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
                 </li>
-                <?php endfor; ?>
+            <?php endfor; ?>
 
-                <!-- Next Button -->
-                <?php if ($page < $totalPages): ?>
+            <?php if ($page < $totalPages): ?>
                 <li class="page-item">
-                    <a class="page-link" href="?page=<?= $page+1 ?>">Next</a>
+                    <a class="page-link" href="?page=<?= $page + 1 ?>">Next</a>
                 </li>
-                <?php endif; ?>
-            </ul>
-        </nav>
-    </div>
+            <?php endif; ?>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        </ul>
+    </nav>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/admin-orders.js"></script>
 </body>
+
 </html>

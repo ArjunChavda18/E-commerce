@@ -1,6 +1,6 @@
 <?php session_start();
-require 'db-connection.php';
-require 'functions/product-function.php'; // ✅ include reusable function
+require 'includes/db-connection.php';
+require 'functions/product-function.php'; //
 include "includes/header.php";
 ?>
 <!-- Cart -->

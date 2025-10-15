@@ -1,5 +1,5 @@
 <?php session_start();
-include 'db-connection.php'; // your DB connection
+include 'includes/db-connection.php'; // your DB connection
 require 'functions/product-function.php'; // ✅ include reusable functions
 
 $id = $_GET['id'] ?? 0;

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'db-connection.php';
+require 'includes/db-connection.php';
 require 'functions/cart-functions.php';
 
 $total = 0;

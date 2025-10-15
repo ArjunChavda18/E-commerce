@@ -1,5 +1,6 @@
 <?php
-include 'product.php';
+include_once __DIR__ . '/../models/product-model.php';
+
 
 class Product{
     public $productModel;
@@ -8,8 +9,9 @@ class Product{
         $this->productModel = new ProductModal($id);
     }
 
-    public function getProducts() {
-        return $products = $this->productModel->getProducts();
+    public function getProducts($search) {
+        $this->productModel->page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        return $products = $this->productModel->getProducts($search, $this->productModel->page);
     }
 
     public function renderProductCard($product) {

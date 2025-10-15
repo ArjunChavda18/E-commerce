@@ -3,7 +3,7 @@ session_start();
 require('vendor/autoload.php'); // Install with composer require razorpay/razorpay
 use Razorpay\Api\Api;
 
-require 'db-connection.php';
+require 'includes/db-connection.php';
 require 'functions/cart-functions.php';
 $cartobj = new Cart;
 $cartTotal = $cartobj->calculateCartTotals();
@@ -38,6 +38,7 @@ $orderData = [
 
 $razorpayOrder = $api->order->create($orderData);
 $orderId = $razorpayOrder['id'];
+
 include "includes/header.php";
 ?>
 <!-- Cart -->
@@ -160,7 +161,9 @@ include "includes/header.php";
 		</div>
 	</div>
 </form>
+<script src="js/checkout.js"></script>
 <script>
+		const checkoutObj = new Checkout();
         var options = {
             "key": "<?php echo "rzp_test_DdpitvgB8j7MSb"; ?>",
             "amount": "<?php echo $amountInPaise; ?>",
@@ -173,7 +176,8 @@ include "includes/header.php";
                 document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
                 document.getElementById('razorpay_signature').value = response.razorpay_signature;
                 //document.getElementById('orderForm').submit();
-				submitOrder();
+				
+				checkoutObj.submitOrder();
             },
             "theme": {
                 "color": "#3399cc"
@@ -181,7 +185,7 @@ include "includes/header.php";
         };
         var rzp1 = new Razorpay(options);
         document.getElementById('rzp-button1').onclick = function(e){
-			if(validateCheckout()){
+			if(checkoutObj.validateCheckout()){
 				return false;
 			}
             rzp1.open();

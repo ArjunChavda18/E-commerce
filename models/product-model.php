@@ -1,5 +1,5 @@
 <?php
-include 'modal.php';
+include __DIR__ . '/../functions/modal.php';
 
 class ProductModal extends Modal {
 
@@ -7,14 +7,15 @@ class ProductModal extends Modal {
         parent::__construct($id);
     }
 
-    public function getProducts($search = '') {
+    public function getProducts($search = '', $page) {
         global $pdo; // Use the global PDO instance
-        $offset = ($this->page - 1) * $this->limit;
+        $offset = ($page - 1) * $this->limit;
+        
         if ($search !== '') {
             $sql = "SELECT id, name, image, price, label, size, color, more_images, product_description
                     FROM products 
                     WHERE name LIKE :search 
-                    ORDER BY id DESC
+                    ORDER BY id ASC
                     LIMIT :limit OFFSET :offset";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);

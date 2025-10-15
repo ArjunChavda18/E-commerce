@@ -1,8 +1,8 @@
 <?php
 session_start();
 if (!isset($_SESSION['admin'])) { header("Location: login.php"); exit(); }
-include("../db-connection.php");
-include '../functions/product.php'; // ✅ include reusable functions
+include __DIR__ . '/../includes/db-connection.php';
+include __DIR__ . '/../models/product-model.php'; // ✅ include reusable functions
 
 
 $productobj = new ProductModal(0);
@@ -13,7 +13,7 @@ if ($page < 1) $page = 1;
 $productobj->page = $page;
 
 // Get products for this page
-$result = $productobj->getProducts();
+$result = $productobj->getProducts($search = '', $page);
 
 // Get total pages
 $totalPages = $productobj->count('');
