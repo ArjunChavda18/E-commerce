@@ -164,6 +164,9 @@ class Product{
                                 <button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail" data-id="<?= $product['id'] ?>" data-name="<?= htmlspecialchars($product['name']) ?>" data-price="<?= $product['price'] ?>">
                                     Add to cart
                                 </button>
+                                <button id="btn3d" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js" style="margin-top: 10px" data-id="<?= $product['id'] ?>">
+                                    3D View
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -188,8 +191,37 @@ class Product{
                 </div>
             </div>
         </div>
-        <?php
-        return ob_get_clean(); // return buffer content
+
+        <!-- Popup container -->
+        <div id="popup" style="
+        display:none;
+        position:fixed;
+        top:50%;
+        left:50%;
+        transform:translate(-50%, -50%);
+        background:white;
+        border-radius:10px;
+        box-shadow:0 0 10px rgba(0,0,0,0.3);
+        z-index:999;
+        text-align:center;
+        width: 50rem;
+        height: 28rem;
+        ">
+        <span id="close-popup" style="
+            position:absolute;
+            top:10px;
+            right:15px;
+            font-size:22px;
+            font-weight:bold;
+            color:#555;
+            cursor:pointer;
+        ">&times;</span>
+            <div id="popup-content"></div>
+            <!-- <button id="close-popup">Close</button> -->
+        </div>
+
+    <?php
+    return ob_get_clean(); // return buffer content
     }
 
     public function getProductDetailsHTML($product){
